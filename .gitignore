@@ -1,1 +1,11 @@
+# Python stuffs
 __pycache__/
+
+# Webdrivers
+driver/
+
+# Environment Variables
+.env
+
+# Editor Config
+.vscode
