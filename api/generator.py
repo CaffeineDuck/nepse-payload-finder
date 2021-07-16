@@ -1,3 +1,4 @@
+from api.errors import NoCache
 import re
 import threading
 import time
@@ -43,7 +44,7 @@ class PayloadGenerator:
 
     def _background_updater(self) -> None:
         while True:
-            self.fetch_payload_id()
+            self._fetch_payload_id()
             time.sleep(60)
 
     def get_logs(self) -> str:
@@ -56,7 +57,7 @@ class PayloadGenerator:
             "message"
         )
 
-    def fetch_payload_id(self) -> int:
+    def _fetch_payload_id(self) -> int:
         log = self.get_logs()
         match = self.payload_id_regex.findall(log)[0]
         payload_id = int(self.number_regex.findall(match)[0])
@@ -64,10 +65,15 @@ class PayloadGenerator:
         self.payload_id_cache["payload_id"] = payload_id
         return payload_id
 
+    def update_payload_id(self) -> None:
+        thread = threading.Thread(target=self._fetch_payload_id, args=())
+        thread.daemon = True
+        thread.start()
+
     def get_payload_id(self) -> int:
         payload_id = self.payload_id_cache.get("payload_id")
 
         if not payload_id:
-            payload_id = self.fetch_payload_id()
+            NoCache()
 
         return payload_id
