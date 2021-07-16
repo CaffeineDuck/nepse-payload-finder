@@ -11,11 +11,18 @@ class PayloadGenerator:
     def __init__(
         self, binary_path: str, webdriver_path: str, web_url: str, api_url: str
     ) -> None:
-        caps = DesiredCapabilities.PHANTOMJS
+        caps = DesiredCapabilities.CHROME
         caps["goog:loggingPrefs"] = {"performance": "ALL"}
 
-        self.driver = webdriver.PhantomJS(
+        options = webdriver.ChromeOptions()
+        options.add_argument("--headless")
+        options._binary_location = binary_path
+
+        self.driver = webdriver.Chrome(
+            webdriver_path,
+            keep_alive=False,
             desired_capabilities=caps,
+            options=options,
         )
 
         # Regex for filtering data
