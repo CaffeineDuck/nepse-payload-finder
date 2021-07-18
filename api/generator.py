@@ -52,6 +52,7 @@ class PayloadGenerator:
         time.sleep(5)
 
         logs = self.driver.get_log("performance")
+        time.sleep(5)
 
         return ([log for log in logs if self.api_url in log.get("message")])[0].get(
             "message"
@@ -74,6 +75,6 @@ class PayloadGenerator:
         payload_id = self.payload_id_cache.get("payload_id")
 
         if not payload_id:
-            NoCache()
+            raise NoCache()
 
         return payload_id
