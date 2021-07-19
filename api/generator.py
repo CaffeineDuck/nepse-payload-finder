@@ -52,7 +52,7 @@ class PayloadGenerator:
         time.sleep(10)
 
         logs = self.driver.get_log("performance")
-        return (''.join([log.get('message') for log in logs]))
+        return (''.join([log.get('message') for log in logs if self.api_url in log.get('message')]))
 
     def _fetch_payload_id(self) -> int:
         log = self.get_logs()
